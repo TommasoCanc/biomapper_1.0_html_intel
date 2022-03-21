@@ -1,5 +1,6 @@
-#   ____________________________________________________________________________
-#   UI  biomapper 1.0                                                                    ####
+#################################
+# Shiny App Biomapper v 0.1 -UI #
+#################################
 
 # Load libraries
 library(shiny)
@@ -16,9 +17,10 @@ library(grid)
 library(plotly)
 #library(bs4Dash)
 library(shinyjs)
+library(png) # Load img
 
-### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
-### Colors                                                                  ####
+
+### Colors ----
 
 #C10250 purple
 #03BCC0 green
@@ -59,7 +61,7 @@ shinyUI(
       column(
         width = 6,
         HTML(
-          "<h2>Insert the taxa richness for each Italian region</h2>
+          "<h2>Insert the taxa richness for each <b>Terrestial</b> geographical units</h2>
           <br>
           <b>Note</b>: F.V.G. = Friuli venezia Giulia; T.A.A. = Trentino Alto Adige, Em-Ro: Emilia Romagna
           <br>
@@ -100,7 +102,7 @@ shinyUI(
         hr(),
         
         fluidRow(
-          HTML("<h2>Insert the taxa richness for each marine region</h2> <br>"),
+          HTML("<h2>Insert the taxa richness for each <b>Marine</b> geographical units</h2> <br>"),
           column(2, numericInput("m1", "Sector 1", 0)),
           column(2, numericInput("m2", "Sector 2", 0)),
           column(2, numericInput("m3", "Sector 3", 0)),
@@ -111,6 +113,20 @@ shinyUI(
           column(2, numericInput("m8", "Sector 8", 0)),
           column(2, numericInput("m9", "Sector 9", 0))
         ),
+        
+        # hr(),
+        # 
+        # fluidRow(
+        #   HTML(
+        #     "<h2>Insert the taxa richness for each <b>Macro</b> geographical units</h2> <br>"
+        #   ),
+        #   column(2, numericInput("N", "North", 0)),
+        #   column(2, numericInput("S", "South", 0)),
+        #   column(2, numericInput("R19", "Sicilia", 0)),
+        #   column(2, numericInput("R20", "Sardegna", 0)),
+        #   column(2, numericInput("R21", "C. Vaticano", 0)),
+        #   column(2, numericInput("R22", "San Marino", 0))
+        # ), 
         
         hr(),
         
@@ -125,27 +141,48 @@ shinyUI(
           ),
           
           column(2, numericInput("ter_bins", "T. n. Bins", 2)),
-          column(2, numericInput("sea_bins", "M. n. Bins", 2))
+          column(2, numericInput("sea_bins", "M. n. Bins", 2)),
+          column(2, numericInput("macro_bins", "MA. n. Bins", 2))
         ),
         
         hr(),
         
-        checkboxInput("plotMap", "Plot interactive map", value = FALSE),
+        fluidRow(
+          HTML("<h2>Plot interactive map</h2>"),
+          checkboxInput("plotMap", HTML("<b>Plot</b>"), value = FALSE),
+        ),
         
+        hr(),
         
-        
-      ),
+        fixedRow(HTML("<h2>Download map</h2>"),
+                 column(6,
+                     selectInput(inputId = "selectMap", label = "",
+                                 choices = c("Terrestrial map" = "map1",
+                                             "Marine map" = "map2",
+                                             "Macro map" = "map3",
+                                             "Terrestrial-Marine map" = "map4",
+                                             "Macro-Marine map" = "map5"),
+                                 selected = "map1",
+                                 multiple = FALSE
+                     ),
+                     
+                     uiOutput("download.Map")
+                     )
+                 ),
+        ),
       
       column(width = 6,
              br(),
              br(),
              leafletOutput("myMap"),
-             br(),
-             uiOutput("download.Map"),
+             # br(),
+             # uiOutput("download.Map"),
              br(),
              plotlyOutput('plot1'),
              br(),
-             plotlyOutput('plot2')
+             plotlyOutput('plot2'),
+             br(),
+             plotlyOutput('plot3'),
              )
       ),
     
