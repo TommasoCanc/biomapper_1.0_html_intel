@@ -387,34 +387,13 @@ server <- function(input, output) {
   
   # Plot small ggplot map
   mapPlot.2 <- reactive({
-    
     img <- readPNG("./data/italy_sea.png")
-   
-    # sf_use_s2(FALSE)
-    # it.1 <-
-    #   cbind(ter.map.reactive(), st_coordinates(st_centroid(ter.map.reactive())))
-    # sea.1 <-
-    #   cbind(sea.map.reactive(), st_coordinates(st_centroid(sea.map.reactive())))
-    # 
-    # p2 <-  ggplot() +
-    #   geom_sf(data = it.1,
-    #           colour = "black",
-    #           fill = "white") +
-    #   geom_sf(data = sea.1,
-    #           colour = "black",
-    #           fill = "white") +
-    #   geom_text(data = it.1, aes(X, Y, label = ID), size = 2) +
-    #   geom_text(data = sea.1,
-    #             aes(X, Y, label = ID),
-    #             size = 3,
-    #             col = "red") +
-    #   theme_bw()
   })
   
   mapPlot.1 <- reactive({
     
     # Map 1: Terrestrial
-  if(input$selectMap == "map1"){
+    if(input$selectMap == "map1"){
     p1 <- ggplot() +
       geom_sf(data = ter.map.reactive(), aes(fill = richness), colour = "black") +
       scale_fill_distiller(
@@ -423,7 +402,6 @@ server <- function(input, output) {
         direction = 1,
         palette = "Greys"
       ) +
-      new_scale("fill") +
       theme_bw() +
       theme(
         axis.text.x = element_blank(),
@@ -435,6 +413,8 @@ server <- function(input, output) {
         legend.position = "bottom"
       ) +
       ggtitle("Terrestrial richness")
+    
+    return(p1)
   }
     
     # Map 2: Marine
@@ -447,7 +427,6 @@ server <- function(input, output) {
           direction = 1,
           palette = "Blues"
         ) +
-        new_scale("fill") +
         theme_bw() +
         theme(
           axis.text.x = element_blank(),
@@ -459,6 +438,8 @@ server <- function(input, output) {
           legend.position = "bottom"
         ) +
         ggtitle("Marine richness")
+      
+      return(p1)
     }
     
     # Map 3: Macro
@@ -471,7 +452,6 @@ server <- function(input, output) {
           direction = 1,
           palette = "Oranges"
         ) +
-        new_scale("fill") +
         theme_bw() +
         theme(
           axis.text.x = element_blank(),
@@ -483,6 +463,74 @@ server <- function(input, output) {
           legend.position = "bottom"
         ) +
         ggtitle("Macro region richness")
+      
+      return(p1)
+    }
+    
+    # Map 4: Terrestrial Marine map
+    if(input$selectMap == "map4"){
+      p1 <- ggplot() +
+        geom_sf(data = ter.map.reactive(), aes(fill = richness), colour = "black") +
+        scale_fill_distiller(
+          "Regional richness",
+          type = "seq",
+          direction = 1,
+          palette = "Greys"
+        ) +
+        new_scale("fill") +
+        geom_sf(data = sea.map.reactive(), aes(fill = richness), colour = "black") +
+        scale_fill_distiller(
+          "Marine richness",
+          type = "seq",
+          direction = 1,
+          palette = "Blues"
+        ) +
+        theme_bw() +
+        theme(
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          rect = element_blank(),
+          panel.background = element_rect(fill = "transparent"),
+          panel.grid.major = element_line(color = "transparent"),
+          legend.position = "bottom"
+        ) +
+        ggtitle("Terrestrial and Marine species richness")
+      
+      return(p1)
+    }
+    
+    # Map 5: Macro Marine map 
+    if(input$selectMap == "map5"){
+      p1 <- ggplot() +
+        geom_sf(data = macro.map.reactive(), aes(fill = richness), colour = "black") +
+        scale_fill_distiller(
+          "Macro richness",
+          type = "seq",
+          direction = 1,
+          palette = "Oranges"
+        ) +
+        new_scale("fill") +
+        geom_sf(data = sea.map.reactive(), aes(fill = richness), colour = "black") +
+        scale_fill_distiller(
+          "Marine richness",
+          type = "seq",
+          direction = 1,
+          palette = "Blues"
+        ) +
+        theme_bw() +
+        theme(
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          rect = element_blank(),
+          panel.background = element_rect(fill = "transparent"),
+          panel.grid.major = element_line(color = "transparent"),
+          legend.position = "bottom"
+        ) +
+        ggtitle("Macro and Marine species richness")
+      
+      return(p1)
     }
     
     }
@@ -567,10 +615,69 @@ server <- function(input, output) {
       )
     }
     
+    # Map 4: Terrestrial Marine map
+    if(input$selectMap == "map4"){
+      g1 <- tableGrob(ter.reactive()[1:11, 2:1],
+                      rows = NULL,
+                      theme = ttheme_minimal(base_size = 8))
+      g2 <- tableGrob(ter.reactive()[12:22, 2:1],
+                      rows = NULL,
+                      theme = ttheme_minimal(base_size = 8))
+      g3 <- tableGrob(sea.reactive()[1:nrow(sea.reactive()), 2:1],
+                      rows = NULL,
+                      theme = ttheme_minimal(base_size = 8))
+      
+      haligned <- gtable_combine(g1, g2, g3, along = 1)
+      
+      title.grob <- textGrob(
+        label = "Terrestial and marine richness",
+        x = unit(0, "lines"),
+        y = unit(-1.5, "lines"),
+        hjust = 0,
+        vjust = 0,
+        gp = gpar(fontsize = 12)
+      )
+      
+      grid.arrange(
+        mapPlot.1(),
+        rasterGrob(mapPlot.2()),
+        arrangeGrob(haligned, top = title.grob),
+        layout_matrix = rbind(c(1, 1, 2),
+                              c(1, 1, 3))
+      )
+    }
+    
+    # Map 5: Macro Marine map 
+    if(input$selectMap == "map5"){
+      g1 <- tableGrob(macro.reactive()[1:nrow(macro.reactive()), 2:1],
+                      rows = NULL,
+                      theme = ttheme_minimal(base_size = 8))
+      g2 <- tableGrob(sea.reactive()[1:nrow(sea.reactive()), 2:1],
+                      rows = NULL,
+                      theme = ttheme_minimal(base_size = 8))
+      
+      haligned <- gtable_combine(g1, g2, along = 1)
+      
+      title.grob <- textGrob(
+        label = "Macro and Marine richness",
+        x = unit(0, "lines"),
+        y = unit(-1.5, "lines"),
+        hjust = 0,
+        vjust = 0,
+        gp = gpar(fontsize = 12)
+      )
+      
+      grid.arrange(
+        mapPlot.1(),
+        rasterGrob(mapPlot.2()),
+        arrangeGrob(haligned, top = title.grob),
+        layout_matrix = rbind(c(1, 1, 2),
+                              c(1, 1, 3))
+      )
+      
+    }
+    
   })
-  
-  
-  
   
   
   # Download button Map ----
@@ -584,44 +691,11 @@ server <- function(input, output) {
       paste("FaunaMap", Sys.Date(), ".pdf")
     },
     content = function(file) {
-      
-      # Create table with richness
-      # g1 <-
-      #   tableGrob(ter.reactive()[1:11, 2:1],
-      #             rows = NULL,
-      #             theme = ttheme_minimal(base_size = 8))
-      # g2 <-
-      #   tableGrob(ter.reactive()[12:22, 2:1],
-      #             rows = NULL,
-      #             theme = ttheme_minimal(base_size = 8))
-      # g3 <-
-      #   tableGrob(sea.reactive()[1:nrow(sea.reactive()), 2:1],
-      #             rows = NULL,
-      #             theme = ttheme_minimal(base_size = 8))
-      # 
-      # haligned <- gtable_combine(g1, g2, g3, along = 1)
-      # 
-      # title.grob <- textGrob(
-      #   label = "Terrestial and marine richness",
-      #   x = unit(0, "lines"),
-      #   y = unit(-1.5, "lines"),
-      #   hjust = 0,
-      #   vjust = 0,
-      #   gp = gpar(fontsize = 12)
-      # )
-      
       pdf(file,
           paper = "a4r",
           width = 11.69,
           height = 8.27)
       textPlot.1()
-      # grid.arrange(
-      #   mapPlot.1(),
-      #   rasterGrob(mapPlot.2()),
-      #   arrangeGrob(haligned, top = title.grob),
-      #   layout_matrix = rbind(c(1, 1, 2),
-      #                         c(1, 1, 3))
-      # )
       dev.off()
     }
   )

@@ -102,7 +102,9 @@ shinyUI(
         hr(),
         
         fluidRow(
-          HTML("<h2>Insert the taxa richness for each <b>Marine</b> geographical units</h2> <br>"),
+          HTML("<h2>Insert the taxa richness for each 
+               <br>
+               <b>Marine</b> geographical units</h2> <br>"),
           column(2, numericInput("m1", "Sector 1", 0)),
           column(2, numericInput("m2", "Sector 2", 0)),
           column(2, numericInput("m3", "Sector 3", 0)),
