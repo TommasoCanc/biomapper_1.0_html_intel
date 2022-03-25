@@ -60,25 +60,32 @@ shinyUI(
       title = "Map Panel",
       column(
         width = 6,
-
+        
         # Import your data ----      
         HTML(
           "<h2>Load data</h2>
-          <b>Note</b>: Data have to be load in a specific format. Please go to the <i><b>Help</b></i> panel for more information."
+          <b>Note</b>: Data have to be load in a specific format. Please go to the <i><b>Help</b></i> panel for more information.
+          <br>
+          <br>
+          Download <b>model 1</b> template at: <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_1.xlsx' target='_blank'>model 1</a>
+          <br>
+          Download <b>model 2</b> template at: <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_2.xlsx' target='_blank'>model 2</a>
+          <br>
+          <br>
+          <b>Select your data</b>
+            <h5>Data can be loaded in <b>.xlsx</b>, <b>.csv</b>, or <b>.txt</b> formats.</h5>"
         ),
-        HTML("Select your data
-            <h5> Data can be loaded in <b>.xlsx</b>, <b>.csv</b>, or <b>.txt</b> formats.</h5>"),
         fixedRow(
-        column(6,
-               fileInput("file1", label = ""), # Import data box
-               ),
-        
-        column(6,
-               selectInput(inputId = "selectInputData", label = "",
-                           choices = c("Model 1" = "model1", # Like example 1
-                                       "Model 2" = "model2"), # Like example 2
-                           selected = "model1",
-                           multiple = FALSE))
+          column(6,
+                 fileInput("file1", label = ""), # Import data box
+          ),
+          
+          column(6,
+                 selectInput(inputId = "selectInputData", label = "",
+                             choices = c("Model 1" = "model1", # Like example 1
+                                         "Model 2" = "model2"), # Like example 2
+                             selected = "model1",
+                             multiple = FALSE))
         ),
         # If selected the graphs are plot with this data
         checkboxInput(inputId = "importData",
@@ -94,40 +101,54 @@ shinyUI(
           <br>
           <br>"
         ),
-
-        fluidRow(
+        
+        fluidRow( # Nord
+          HTML("<h4><b>Continental Italy</b></h4>"),
+          column(2, numericInput("emilia", "Em-Ro", 0)),
+          column(2, numericInput("friuli", "F.V.G.", 0)),
+          column(2, numericInput("liguria", "Liguria", 0)),
+          column(2, numericInput("lombardia", "Lombardia", 0)),
+          column(2, numericInput("piemonte", "Piemonte", 0)),
+          column(2, numericInput("trentino", "T.A.A.", 0)),
+          column(2, numericInput("aosta", "Valle Aosta", 0)),
+          column(2, numericInput("veneto", "Veneto", 0))
+        ),
+        
+        br(),
+        
+        fluidRow( # Sud
+          HTML("<h4><b>Peninsular Italy</b></h4>"),
           column(2, numericInput("abruzzo", "Abruzzo", 0)),
           column(2, numericInput("basilicata", "Basilicata", 0)),
           column(2, numericInput("calabria", "Calabria", 0)),
           column(2, numericInput("campania", "Campania", 0)),
-          column(2, numericInput("emilia", "Em-Ro", 0)),
-          column(2, numericInput("friuli", "F.V.G.", 0))
-        ),
-        fluidRow(
           column(2, numericInput("lazio", "Lazio", 0)),
-          column(2, numericInput("liguria", "Liguria", 0)),
-          column(2, numericInput("lombardia", "Lombardia", 0)),
           column(2, numericInput("marche", "Marche", 0)),
           column(2, numericInput("molise", "Molise", 0)),
-          column(2, numericInput("piemonte", "Piemonte", 0))
-        ),
-        fluidRow(
           column(2, numericInput("puglia", "Puglia", 0)),
-          column(2, numericInput("sardegna", "Sardegna", 0)),
-          column(2, numericInput("sicilia", "Sicilia", 0)),
           column(2, numericInput("toscana", "Toscana", 0)),
-          column(2, numericInput("trentino", "T.A.A.", 0)),
           column(2, numericInput("umbria", "Umbria", 0))
         ),
-        fluidRow(
-          column(2, numericInput("aosta", "Valle Aosta", 0)),
-          column(2, numericInput("veneto", "Veneto", 0)),
+        
+        br(),
+        
+        fluidRow( # Isole
+          HTML("<h4><b>Islas</b></h4>"),
+          column(2, numericInput("sardegna", "Sardegna", 0)),
+          column(2, numericInput("sicilia", "Sicilia", 0))
+        ),
+        
+        br(),
+        
+        fluidRow( 
+          HTML("Out"),
+          br(),
           column(2, numericInput("vaticano", "C. Vaticano", 0)),
           column(2, numericInput("smarino", "San Marino", 0))
         ),
-
+        
         hr(),
-
+        
         fluidRow(
           HTML("<h2>Insert the taxa richness for each
                <br>
@@ -142,9 +163,9 @@ shinyUI(
           column(2, numericInput("m8", "Sector 8", 0)),
           column(2, numericInput("m9", "Sector 9", 0))
         ),
-
+        
         hr(),
-
+        
         fluidRow(
           HTML(
             "<h2>Insert the number of bins</h2>
@@ -154,21 +175,21 @@ shinyUI(
             <br>
             <br>"
           ),
-
+          
           column(2, numericInput("ter_bins", "T. n. Bins", 2)),
           column(2, numericInput("sea_bins", "M. n. Bins", 2)),
           column(2, numericInput("macro_bins", "MA. n. Bins", 2))
         ),
-
+        
         hr(),
-
+        
         fluidRow(
           HTML("<h2>Plot interactive map</h2>"),
           checkboxInput("plotMap", HTML("<b>Plot</b>"), value = FALSE),
         ),
-
+        
         hr(),
-
+        
         fluidRow(HTML("<h2>Download map</h2>"),
                  column(6,
                         selectInput(inputId = "selectMap", label = "",
@@ -180,7 +201,7 @@ shinyUI(
                                     selected = "map1",
                                     multiple = FALSE
                         ),
-
+                        
                         uiOutput("download.Map")
                  )
         )
@@ -199,7 +220,7 @@ shinyUI(
              br(),
              plotlyOutput('plot3'),
       )
-      ),
+    ),
     
     # tab panel 3 - Data Report ----------------------------------
     tabPanel(title = "Data Report",
