@@ -79,24 +79,98 @@ server <- function(input, output) {
     return(macro.df)
     
   })
+
   
+###################################################################################################################################
+  # Input data ----
+  readInput <- reactive({
+    
+    # Dataset with taxa and sampling site
+    # tools::file_ext(inFile$datapath) <- automatically identify the format
+    inFile <- input$file1
+    if (is.null(inFile))
+      return(NULL)
+    if(tools::file_ext(inFile$datapath) == "xlsx"){
+      DF_init <- data.frame(readxl::read_excel(inFile$datapath, sheet = 1))
+    }
+    if(tools::file_ext(inFile$datapath) == "csv"){
+      DF_init <- read.csv(inFile$datapath, header = TRUE, sep = ";")
+    }
+    if(tools::file_ext(inFile$datapath) == "txt"){
+      DF_init <- read.table(inFile$datapath, header = TRUE)
+    }
+    
+    # write some conditions (e.g. check the col names to verify the model)
+    
+    # Check col names Model 1
+    
+    
+    
+    if(input$selectInputData == "model1"){
+      DF_init <- DF_init[ ,c(3,2)]
+      row.names(DF_init) <- DF_init$ID  
+    } else {
+      # Number of species for column
+      DF_init <- data.frame(colSums(ifelse(DF_init[ , c(19:29, 31:52)] == "yes", 1, 0)))
+      colnames(DF_init) <- "richness"
+      DF_init$ID <- c("M1", "M2",	"M3",	"M4",	"M5",	"M6",	"M7",	"M8",	"M9",	"N",	"S",		"R2",	"R1",	"R3",	"R4",	"R5",	"R6",	"R7",	"R8",	"R9",	"R11",	"R10",	"R12",	"R13",	"R14",	"R15",	"R16",	"R17",	"R18",	"R19",	"R20",	"R22",	"R21")
+    }
+    
+    list(DF = DF_init)
+    
+  })
+  
+  # output$tbl <- renderUI({
+  #   if (is.null(input$file1)) {
+  #     showNotification(
+  #       "Data do not upload",
+  #       duration = 5,
+  #       type = "warning",
+  #       closeButton = TRUE
+  #     )
+  #   }
+  #   if (!is.null(input$file1)) {
+  #     datatable(
+  #       readInput()$DF,
+  #       rownames = FALSE,
+  #       options = list(lengthChange = FALSE, scrollX = FALSE),
+  #       editable = TRUE,
+  #       width = 900
+  #     )
+  #   }
+  # })
+
+################################################################################################################################### 
+  # O fare interazione con i dati caricati
   
   # Merge shp and richness (Terrestrial)
   ter.map.reactive <- reactive({
     it <- st_read("./data/Italy/Italy_complete.shp")
-    it <- merge(it, ter.reactive(), by = "ID") # Merge shapefile with richness data
+    if(input$importData == 1){
+      it <- merge(it, readInput()$DF, by = "ID") # Merge shapefile with richness data
+    } else {
+      it <- merge(it, ter.reactive(), by = "ID") # Merge shapefile with richness data
+    }
   })
   
   # Merge shp and richness (Marine)
   sea.map.reactive <- reactive({
     sea <- st_read("./data/bio_sea/bio_sea_IT_4326.shp")
-    sea <- merge(sea, sea.reactive(), by = "ID") # Merge shapefile with richness data
+    if(input$importData == 1){
+      sea <- merge(sea, readInput()$DF, by = "ID") # Merge shapefile with richness data
+    } else {
+      sea <- merge(sea, sea.reactive(), by = "ID") # Merge shapefile with richness data  
+    }
   })
   
   # Merge shp and richness (Macro)
   macro.map.reactive <- reactive({
     macro <- st_read("./data/North_South/North_South.shp")
-    macro <- merge(macro, macro.reactive(), by = "ID") # Merge shapefile with richness data
+    if(input$importData == 1){
+      macro <- merge(macro, readInput()$DF, by = "ID") # Merge shapefile with richness data
+    } else {
+      macro <- merge(macro, macro.reactive(), by = "ID") # Merge shapefile with richness data 
+    }
   })
   
   # Leaflet map ----
@@ -344,7 +418,7 @@ server <- function(input, output) {
       y = macro.map.reactive()$richness,
       type = 'bar',
       marker = list(
-        color = 'rgb(173,216,230)',
+        color = 'rgb(255,154,36)',
         line = list(color = 'rgb(86,108,115)',
                     width = 1.5)
       )
@@ -352,44 +426,12 @@ server <- function(input, output) {
       layout(xaxis = xform.plot3)
   )
   
-  
-  # Plot main ggplot map ----
-  # mapPlot.1 <- reactive({
-  #   p1 <- ggplot() +
-  #     geom_sf(data = ter.map.reactive(), aes(fill = richness), colour = "black") +
-  #     scale_fill_distiller(
-  #       "Regional richness",
-  #       type = "seq",
-  #       direction = 1,
-  #       palette = "Greys"
-  #     ) +
-  #     new_scale("fill") +
-  #     
-  #     geom_sf(data = sea.map.reactive(), aes(fill = richness), colour = "black") +
-  #     scale_fill_distiller(
-  #       "Marine richness",
-  #       type = "seq",
-  #       direction = 1,
-  #       palette = "Blues"
-  #     ) +
-  #     theme_bw() +
-  #     theme(
-  #       axis.text.x = element_blank(),
-  #       axis.text.y = element_blank(),
-  #       axis.ticks = element_blank(),
-  #       rect = element_blank(),
-  #       panel.background = element_rect(fill = "transparent"),
-  #       panel.grid.major = element_line(color = "transparent"),
-  #       legend.position = "bottom"
-  #     ) +
-  #     ggtitle("Terrestrial and Marine species richness")
-  # })
-  
   # Plot small ggplot map
   mapPlot.2 <- reactive({
     img <- readPNG("./data/italy_sea.png")
   })
   
+  # Create map-plot
   mapPlot.1 <- reactive({
     
     # Map 1: Terrestrial
@@ -536,6 +578,7 @@ server <- function(input, output) {
     }
   )
   
+  # Create text for the maps
   textPlot.1 <- reactive({
     
     # Map 1: Terrestrial richness
