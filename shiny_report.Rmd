@@ -1,0 +1,22 @@
+---
+title: "`r params$reportName`"
+output: html_document
+author: "`r params$authorName`"
+date: "`r Sys.Date()`"
+#geometry: "left=1cm,right=0.5cm,top=2cm,bottom=2cm"
+params:
+  reportName: NA
+  authorName: NA
+  tableTax: NA
+---
+
+```{r report, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+library(kableExtra)
+options(Encoding="UTF-8")
+kbl(params$tableTax, row.names = FALSE) %>%
+   kable_classic(full_width = TRUE, html_font = "Cambria") %>% 
+  column_spec(5, italic = TRUE)
+  #kable_minimal()
+```
+

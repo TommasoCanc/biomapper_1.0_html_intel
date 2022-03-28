@@ -3,6 +3,10 @@
 ######################################
 
 server <- function(input, output) {
+  
+  
+# Map panel ---- 
+  
   # Terrestial geographical units ----
   ter.reactive <- reactive({
     ter.df <-
@@ -80,9 +84,7 @@ server <- function(input, output) {
     
   })
 
-  
-###################################################################################################################################
-  # Input data ----
+    # Input data for mapping ----
   readInput <- reactive({
     
     # Dataset with taxa and sampling site
@@ -101,10 +103,6 @@ server <- function(input, output) {
     }
     
     # write some conditions (e.g. check the col names to verify the model)
-    
-    # Check col names Model 1
-    
-    
     
     if(input$selectInputData == "model1"){
       DF_init <- DF_init[ ,c(3,2)]
@@ -139,9 +137,6 @@ server <- function(input, output) {
   #     )
   #   }
   # })
-
-################################################################################################################################### 
-  # O fare interazione con i dati caricati
   
   # Merge shp and richness (Terrestrial)
   ter.map.reactive <- reactive({
@@ -725,13 +720,13 @@ server <- function(input, output) {
   
   # Download button Map ----
   output$download.Map <- renderUI({
-    downloadButton("download.gadmMap.but", "Download FaunaMap")
+    downloadButton("download.gadmMap.but", "Download biomapper")
   })
   
   #  Save map
   output$download.gadmMap.but <- downloadHandler(  
     filename = function() {
-      paste("FaunaMap", Sys.Date(), ".pdf")
+      paste("Map_biomapper", Sys.Date(), ".pdf")
     },
     content = function(file) {
       pdf(file,
@@ -740,6 +735,136 @@ server <- function(input, output) {
           height = 8.27)
       textPlot.1()
       dev.off()
+    }
+  )
+  
+  
+# Report Panel ----
+  
+  readInput2 <- reactive({
+    
+    # Dataset with taxa and sampling site
+    # tools::file_ext(inFile$datapath) <- automatically identify the format
+    inFile2 <- input$file2
+    if (is.null(inFile2))
+      return(NULL)
+    if(tools::file_ext(inFile2$datapath) == "xlsx"){
+      DF_report <- data.frame(readxl::read_excel(inFile2$datapath, sheet = 1))
+    }
+    if(tools::file_ext(inFile2$datapath) == "csv"){
+      DF_report <- read.csv(inFile2$datapath, header = TRUE, sep = ";")
+    }
+    if(tools::file_ext(inFile2$datapath) == "txt"){
+      DF_report <- read.table(inFile2$datapath, header = TRUE)
+    }
+    
+    # write some conditions (e.g. check the col names to verify the model)
+    
+    DF_report <- DF_report[ ,c("phylum", "class", "order", "family", "scientificName", "scientificNameAuthorship")]
+    
+    # Sort by vector name [z] then [x]
+    taxa.reorder <- DF_report[with(DF_report, order(phylum, class, order, family)), ]
+    
+    # Phylum column preparation ... Attenzione !is.na(unique(taxa.reorder$class)) prende solo il primo valore
+    if(length(unique(taxa.reorder$phylum)) > 0 & !is.na(unique(taxa.reorder$phylum))) {
+      toAdd <- data.frame()
+      for (i in unique(taxa.reorder$phylum)) {
+        toAdd.1 <- data.frame(phylum = c(i, rep(NA, length(which(taxa.reorder$phylum == i)) - 1)))
+        toAdd <- rbind(toAdd, toAdd.1)
+      }
+      taxa.reorder$phylum <- toAdd$phylum
+      rm(i, toAdd, toAdd.1)
+    }
+    
+    # Class column preparation ... Attenzione !is.na(unique(taxa.reorder$class)) prende solo il primo valore
+    if(length(unique(taxa.reorder$class)) > 0 & !is.na(unique(taxa.reorder$class))) {
+      toAdd <- data.frame()
+      for (i in unique(taxa.reorder$class)) {
+        toAdd.1 <- data.frame(class = c(i, rep(NA, length(which(taxa.reorder$class == i)) - 1)))
+        toAdd <- rbind(toAdd, toAdd.1)
+      }
+      taxa.reorder$class <- toAdd$class
+      rm(i, toAdd, toAdd.1)
+    }
+    
+    # Order column preparation
+    if(length(unique(taxa.reorder$order)) > 0 & !is.na(unique(taxa.reorder$order))) {
+      toAdd <- data.frame()
+      for (i in unique(taxa.reorder$order)) {
+        toAdd.1 <- data.frame(order = c(i, rep(NA, length(which(taxa.reorder$order == i)) - 1)))
+        toAdd <- rbind(toAdd, toAdd.1)
+      }
+      taxa.reorder$order <- toAdd$order
+      rm(i, toAdd, toAdd.1)
+    }
+    
+    # Family column preparation
+    if(length(unique(taxa.reorder$family)) > 0 & !is.na(unique(taxa.reorder$family))) {
+      toAdd <- data.frame()
+      for (i in unique(taxa.reorder$family)) {
+        toAdd.1 <- data.frame(family = c(i, rep(NA, length(which(taxa.reorder$family == i)) - 1)))
+        toAdd <- rbind(toAdd, toAdd.1)
+      }
+      taxa.reorder$family <- toAdd$family
+      rm(i, toAdd, toAdd.1)
+    }
+    
+    taxa.reorder[is.na(taxa.reorder)] = ""
+    
+    colnames(taxa.reorder) <- c("Phylum", "Class", "Order", "Family", "Scientific Name", "Authorship")
+    
+    list(report = taxa.reorder)
+    
+  })
+  
+  output$tblReport <- renderUI({
+    if (is.null(input$file2)) {
+      showNotification(
+        "Data do not upload",
+        duration = 5,
+        type = "warning",
+        closeButton = TRUE
+      )
+    }
+    if (!is.null(input$file2)) {
+      datatable(
+        readInput2()$report,
+        rownames = FALSE,
+        options = list(lengthChange = FALSE, scrollX = FALSE),
+        editable = TRUE,
+        width = 1000
+      )
+    }
+  })
+  
+  
+  # Download button Report ----
+  output$download.Report <- renderUI({
+    if (!is.null(input$file2)) {
+    downloadButton("download.Report.but", "Download Report biomapper")
+    }
+  })
+  
+  #  Save map
+  output$download.Report.but <- downloadHandler(  
+    filename = function() {
+      paste("Report_biomapper", Sys.Date(), ".html")
+    },
+    content = function(file) {
+      tempReport <- file.path(tempdir(), "shiny_report.Rmd")
+      file.copy("~/Desktop/shiny_report.Rmd", tempReport, overwrite = TRUE)
+      
+      params <- list(reportName = input$reportName,
+                     authorName = input$authorName,
+                     tableTax = readInput2()$report)
+      
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        encoding="UTF-8",
+                        envir = new.env(parent = globalenv())
+      )
+      
+      
     }
   )
   

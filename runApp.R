@@ -1,3 +1,6 @@
-library(shiny)
+###########################
+# START biomapper 1.0 App #
+###########################
 
-runApp(readline("Enter directory of shiny app: "))
+library(shiny)
+runGitHub('biomapper_1.0_html_intel','TommasoCanc', ref="main")

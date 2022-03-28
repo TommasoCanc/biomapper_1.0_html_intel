@@ -18,7 +18,9 @@ library(plotly)
 #library(bs4Dash)
 library(shinyjs)
 library(png) # Load img
-
+library(dplyr)
+library(knitr)
+library(kableExtra)
 
 ### Colors ----
 
@@ -75,7 +77,8 @@ shinyUI(
           <b>Select your data</b>
             <h5>Data can be loaded in <b>.xlsx</b>, <b>.csv</b>, or <b>.txt</b> formats.</h5>"
         ),
-        fixedRow(
+        
+        fluidRow(
           column(6,
                  fileInput("file1", label = ""), # Import data box
           ),
@@ -133,7 +136,7 @@ shinyUI(
         br(),
         
         fluidRow( # Isole
-          HTML("<h4><b>Islas</b></h4>"),
+          HTML("<h4><b>Island</b></h4>"),
           column(2, numericInput("sardegna", "Sardegna", 0)),
           column(2, numericInput("sicilia", "Sicilia", 0))
         ),
@@ -141,7 +144,7 @@ shinyUI(
         br(),
         
         fluidRow( 
-          HTML("Out"),
+          HTML("<h4><b>Out of Italian administrative boundaries</b></h4>"),
           br(),
           column(2, numericInput("vaticano", "C. Vaticano", 0)),
           column(2, numericInput("smarino", "San Marino", 0))
@@ -171,7 +174,7 @@ shinyUI(
             "<h2>Insert the number of bins</h2>
             <br>
             <b>Note</b>:
-            T. n. Bins = Terrestral number of bins; M. n. Bins =  Marine number of bins
+            T. n. Bins = Terrestral number of bins; M. n. Bins =  Marine number of bins; MA. n. Bins =  Macro number of bins
             <br>
             <br>"
           ),
@@ -224,10 +227,32 @@ shinyUI(
     
     # tab panel 3 - Data Report ----------------------------------
     tabPanel(title = "Data Report",
-             column(
-               width = 6,
-               HTML("<h2>Data Report</h2>")
-             )),
+             fluidRow(
+               column(width = 5,
+                      HTML("<h2>Taxonomy Report</h2>"),
+                      
+                      br(),
+                      
+                      column(width = 6,
+                             HTML("Load data"),       
+                             fileInput("file2", label = ""), # Import data box
+                             ),
+                      
+                      column(width = 6,
+                             HTML("Report name"),       
+                             textInput("reportName", "", "Text your report name"), # Insert the report name
+                             textInput("authorName", "", "Text author names")
+                      )
+                      ),
+               
+               column(width = 7,
+                      uiOutput("tblReport"),
+                      uiOutput("download.Report")
+                      )
+               ),
+             
+             hr()
+             ),
     
     
     # tab panel 4 - About ---------------------------------------
