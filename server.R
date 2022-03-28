@@ -845,14 +845,15 @@ server <- function(input, output) {
     }
   })
   
-  #  Save map
+  #  Save taxonomy report
   output$download.Report.but <- downloadHandler(  
     filename = function() {
       paste("Report_biomapper", Sys.Date(), ".html")
     },
     content = function(file) {
+      
       tempReport <- file.path(tempdir(), "shiny_report.Rmd")
-      file.copy("~/Desktop/shiny_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy("/shiny_report.Rmd", tempReport, overwrite = TRUE)
       
       params <- list(reportName = input$reportName,
                      authorName = input$authorName,
@@ -863,8 +864,6 @@ server <- function(input, output) {
                         encoding="UTF-8",
                         envir = new.env(parent = globalenv())
       )
-      
-      
     }
   )
   

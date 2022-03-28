@@ -229,18 +229,24 @@ shinyUI(
     tabPanel(title = "Data Report",
              fluidRow(
                column(width = 5,
-                      HTML("<h2>Taxonomy Report</h2>"),
+                      HTML("<h2>Taxonomy Report</h2>
+                           <br>
+                           <b>Note</b>: Data have to be load in the format <i><b>model 2</b></i>.
+                           <br>
+                           Download <b>model 2</b> template at: <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_2.xlsx' target='_blank'>model 2</a>"),
                       
+                      br(),
                       br(),
                       
                       column(width = 6,
-                             HTML("Load data"),       
+                             HTML("<b>Select your data (<b>.xlsx</b>, <b>.csv</b>, or <b>.txt</b>)</b>"),       
                              fileInput("file2", label = ""), # Import data box
                              ),
                       
                       column(width = 6,
-                             HTML("Report name"),       
+                             HTML("<b>Report name</b>"),       
                              textInput("reportName", "", "Text your report name"), # Insert the report name
+                             HTML("<b>Report Author</b>"),       
                              textInput("authorName", "", "Text author names")
                       )
                       ),
