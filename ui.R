@@ -51,7 +51,7 @@ shinyUI(
                   href = "plugins/font-awesome-4.7.0/css/font-awesome.min.css"),
         tags$link(rel = "icon",
                   type = "image/png",
-                  href = "images/jon.jpg") # Cambiare questa foto
+                  href = "images/pic1.png") # Cambiare questa foto
       ),
       tags$footer(includeHTML("footer.html"))
     ),
