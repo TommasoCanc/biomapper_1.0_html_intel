@@ -33,7 +33,9 @@ server <- function(input, output) {
           R19 = input$sicilia, # Sicilia
           R20 = input$sardegna, # Sardegna
           R21 = input$vaticano, # Vatican City
-          R22 = input$smarino # San Marino
+          R22 = input$smarino, # San Marino
+          R23 = input$corsica, # Corsica
+          R24 = input$ticino # Canton Ticino
         )
       ))
     
@@ -74,7 +76,9 @@ server <- function(input, output) {
         R19 = input$sicilia, # Sicilia
         R20 = input$sardegna, # Sardegna
         R21 = input$vaticano, # Vatican City
-        R22 = input$smarino # San Marino
+        R22 = input$smarino, # San Marino
+        R23 = input$corsica, # Corsica
+        R24 = input$ticino # Canton Ticino
       )
     ))
     
@@ -104,14 +108,14 @@ server <- function(input, output) {
     
     # write some conditions (e.g. check the col names to verify the model)
     
-    if(input$selectInputData == "model1"){
+    if(input$selectInputData == "model1"){ # MODEL 1
       DF_init <- DF_init[ ,c(3,2)]
       row.names(DF_init) <- DF_init$ID  
-    } else {
+    } else { # MODEL 2
       # Number of species for column
-      DF_init <- data.frame(colSums(ifelse(DF_init[ , c(19:29, 31:52)] == "yes", 1, 0)))
+      DF_init <- data.frame(colSums(ifelse(DF_init[ , c(19:29, 31:54)] == "yes", 1, 0)))
       colnames(DF_init) <- "richness"
-      DF_init$ID <- c("M1", "M2",	"M3",	"M4",	"M5",	"M6",	"M7",	"M8",	"M9",	"N",	"S",		"R2",	"R1",	"R3",	"R4",	"R5",	"R6",	"R7",	"R8",	"R9",	"R11",	"R10",	"R12",	"R13",	"R14",	"R15",	"R16",	"R17",	"R18",	"R19",	"R20",	"R22",	"R21")
+      DF_init$ID <- c("M1", "M2",	"M3",	"M4",	"M5",	"M6",	"M7",	"M8",	"M9",	"N",	"S",		"R2",	"R1",	"R3",	"R4",	"R5",	"R6",	"R7",	"R8",	"R9",	"R11",	"R10",	"R12",	"R13",	"R14",	"R15",	"R16",	"R17",	"R18",	"R19",	"R20",	"R22",	"R21", "R24", "R23")
     }
     
     list(DF = DF_init)
@@ -140,7 +144,7 @@ server <- function(input, output) {
   
   # Merge shp and richness (Terrestrial)
   ter.map.reactive <- reactive({
-    it <- st_read("./data/Italy/Italy_complete.shp")
+    it <- st_read("./data/Italy_complete/Italy_Complete.shp")
     if(input$importData == 1){
       it <- merge(it, readInput()$DF, by = "ID") # Merge shapefile with richness data
     } else {
@@ -289,7 +293,7 @@ server <- function(input, output) {
           textsize = "13px",
           direction = "auto"
         ),
-        group = "terrestrial.group"
+        group = "Terrestrial"
       ) %>%
         
         # Sea geographical units ----
@@ -306,7 +310,7 @@ server <- function(input, output) {
           textsize = "13px",
           direction = "auto"
         ),
-        group = "marine.group"
+        group = "Marine"
       ) %>%
        
         # Macro geographical units ----
@@ -323,7 +327,7 @@ server <- function(input, output) {
           textsize = "13px",
           direction = "auto"
         ),
-        group = "macro.group"
+        group = "Macro"
       ) %>%
       
       leaflet::addLegend(
@@ -331,15 +335,17 @@ server <- function(input, output) {
         pal = mypalette.ter,
         title = "Terrestrial",
         values = ter.map.reactive()$richness,
-        group = "terrestrial.group"
+        group = "Terrestrial",
+        opacity = 0.9
       )  %>%
         
         leaflet::addLegend(
           "bottomright",
           pal = mypalette.sea,
-          title = "Sea",
+          title = "Marine",
           values = sea.map.reactive()$richness,
-          group = "marine.group"
+          group = "Marine",
+          opacity = 0.9
         ) %>%
         
         leaflet::addLegend(
@@ -347,15 +353,17 @@ server <- function(input, output) {
           pal = mypalette.macro,
           title = "Macro",
           values = macro.map.reactive()$richness,
-          group = "macro.group"
+          group = "Macro",
+          opacity = 0.9
         ) %>%
         
         
         leaflet::addLayersControl(
-          overlayGroups = c("terrestrial.group", "marine.group", "macro.group"),
-          options = layersControlOptions(collapsed = FALSE)
+          overlayGroups = c("Terrestrial", "Marine", "Macro"),
+          options = layersControlOptions(collapsed = FALSE),
+          position = "bottomleft"
         ) %>%
-        hideGroup(c("terrestrial.group", "marine.group", "macro.group"))
+        hideGroup(c("Terrestrial", "Marine", "Macro"))
       
       
     } else {
@@ -372,12 +380,12 @@ server <- function(input, output) {
   # Reorder x tips plot 1
   xform.plot1 <- list(
     categoryorder = "array",
-    categoryarray = c("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17",      "R18", "R19", "R20", "R21", "R22")
+    categoryarray = c("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17",      "R18", "R19", "R20", "R21", "R22", "R23", "R24")
   )
   # Reorder x tips plot 3
   xform.plot3 <- list(
     categoryorder = "array",
-    categoryarray = c("N", "S", "R19", "R20", "R21", "R22")
+    categoryarray = c("N", "S", "R19", "R20", "R21", "R22", "R23", "R24")
   )
   
   output$plot1 <- renderPlotly(
@@ -720,7 +728,7 @@ server <- function(input, output) {
   
   # Download button Map ----
   output$download.Map <- renderUI({
-    downloadButton("download.gadmMap.but", "Download biomapper")
+    downloadButton("download.gadmMap.but", "Download")
   })
   
   #  Save map
@@ -841,7 +849,7 @@ server <- function(input, output) {
   # Download button Report ----
   output$download.Report <- renderUI({
     if (!is.null(input$file2)) {
-    downloadButton("download.Report.but", "Download Report biomapper")
+    downloadButton("download.Report.but", "Download")
     }
   })
   

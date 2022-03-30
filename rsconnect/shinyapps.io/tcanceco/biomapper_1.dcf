@@ -1,0 +1,14 @@
+name: biomapper_1
+title: biomapper_1
+username:
+account: tcanceco
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5965684
+bundleId: 5742008
+url: https://tcanceco.shinyapps.io/biomapper_1/
+when: 1648585868.41804
+lastSyncTime: 1648585868.41805
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: runApp.R|UI/tab panel 2_UI.R

@@ -132,7 +132,7 @@ shinyUI(
         hr(),
         
         HTML(
-          "<h2>Insert the taxa richness for each <b>Terrestial</b> geographical units</h2>
+          "<h2><b>Terrestial</b> geographical units</h2>
           <br>
           <b>Note</b>: F.V.G. = Friuli venezia Giulia; T.A.A. = Trentino Alto Adige, Em-Ro: Emilia Romagna
           <br>
@@ -170,7 +170,7 @@ shinyUI(
         br(),
         
         fluidRow( # Isole
-          HTML("<h4><b>Island</b></h4>"),
+          HTML("<h4><b>Islands</b></h4>"),
           column(2, numericInput("sardegna", "Sardegna", 0)),
           column(2, numericInput("sicilia", "Sicilia", 0))
         ),
@@ -178,11 +178,13 @@ shinyUI(
         br(),
         
         fluidRow( 
-          HTML("<h4><b>Out of Italian administrative boundaries</b></h4>"),
+          HTML("<h4><b>Geopolitical units biogeographically related to Italy</b></h4>"),
           br(),
-          column(2, numericInput("vaticano", "C. Vaticano", 0)),
-          column(2, numericInput("smarino", "San Marino", 0))
-        ),
+          column(2, numericInput("vaticano", "Vatican City", 0)),
+          column(2, numericInput("smarino", "San Marino", 0)),
+          column(2, numericInput("corsica", "Corsica", 0)),
+          column(2, numericInput("ticino", "Canton Ticino", 0))
+          ),
         
         hr(),
         
@@ -205,7 +207,7 @@ shinyUI(
         
         fluidRow(
           HTML(
-            "<h2>Insert the number of bins</h2>
+            "<h2>Plot interactive map</h2>
             <br>
             <b>Note</b>:
             T. n. Bins = Terrestral number of bins; M. n. Bins =  Marine number of bins; MA. n. Bins =  Macro number of bins
@@ -213,17 +215,15 @@ shinyUI(
             <br>"
           ),
           
-          column(2, numericInput("ter_bins", "T. n. Bins", 2)),
-          column(2, numericInput("sea_bins", "M. n. Bins", 2)),
-          column(2, numericInput("macro_bins", "MA. n. Bins", 2))
-        ),
-        
-        hr(),
-        
-        fluidRow(
-          HTML("<h2>Plot interactive map</h2>"),
+          column(2, numericInput("ter_bins", "Terrestial Bins", 2)),
+          column(2, numericInput("sea_bins", "Marine Bins", 2)),
+          column(2, numericInput("macro_bins", "Macro Bins", 2))
+          ),
+          
+          br(),
+          
           checkboxInput("plotMap", HTML("<b>Plot</b>"), value = FALSE),
-        ),
+        
         
         hr(),
         
@@ -236,13 +236,12 @@ shinyUI(
                                                 "Terrestrial-Marine map" = "map4",
                                                 "Macro-Marine map" = "map5"),
                                     selected = "map1",
-                                    multiple = FALSE
-                        ),
+                                    multiple = FALSE),
                         
                         uiOutput("download.Map")
+                        )
                  )
-        )
-      ),
+        ),
       
       
       column(width = 6,
