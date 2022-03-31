@@ -332,10 +332,10 @@ div#ss-connect-dialog a:visited {
 	display: inline;
 }
 
-.property-details {
+/*.property-details {
 	display: inline;
 	align: right;
-}
+}*/
 
 @media screen and (max-width: 800px){
   .property-card-container a {
@@ -396,10 +396,10 @@ div#ss-connect-dialog a:visited {
 }
 
 @media screen and (min-width: 600px) {
-	.property-card-container a img {
+	/*.property-card-container a img {*/
 		/*filter: grayscale(100%);*/
 		/*animation: color-to-gs 1s;*/
-	}
+	/*}*/
 
 	.property-card-container img {
 		transition: transform .8s ease-in-out;

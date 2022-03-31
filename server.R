@@ -380,12 +380,30 @@ server <- function(input, output) {
   # Reorder x tips plot 1
   xform.plot1 <- list(
     categoryorder = "array",
-    categoryarray = c("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17",      "R18", "R19", "R20", "R21", "R22", "R23", "R24")
+    categoryarray = c("R8", "R6", "R7", "R3", "R1", "R4", "R2", "R5", "R13", "R17", "R18", "R15", "R12", "R11", "R14", "R16", "R9",                       "R10", "R20", "R19", "R21", "R22", "R23", "R24"),
+    tickvals = c("R8", "R6", "R7", "R3", "R1", "R4", "R2", "R5", "R13", "R17", "R18", "R15", "R12", "R11", "R14", "R16","R9", 
+                 "R10","R20", "R19", "R21", "R22", "R23", "R24"), 
+    ticktext = c("Emilia-Romagna", "Friuli-Venezia Giulia", "Liguria", "Lombardia", "Piemonte", "Trentino-Alto Adige",                              "Valle d’Aosta", "Veneto", "Abruzzo", "Basilicata", "Calabria", "Campania", "Lazio", "Marche", "Molise", 
+                 "Puglia", "Toscana", "Umbria",  "Sardegna", "Sicilia", "Vatican City", "San Marino", "Corsica", "Canton Ticino"), 
+    tickangle = 315
   )
+  
+  # Reorder x tips plot 2
+  xform.plot2 <- list(
+    categoryorder = "array",
+    categoryarray = c("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"),
+    tickvals = c("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"), 
+    ticktext = c("Sector 1", "Sector 2", "Sector 3", "Sector 4", "Sector 5", "Sector 6", "Sector 7", "Sector 8", "Sector 9"), 
+    tickangle = 315
+  )
+  
   # Reorder x tips plot 3
   xform.plot3 <- list(
     categoryorder = "array",
-    categoryarray = c("N", "S", "R19", "R20", "R21", "R22", "R23", "R24")
+    categoryarray = c("N", "S", "R20", "R19", "R21", "R22", "R23", "R24"),
+    tickvals = c("N", "S", "R20", "R19",  "R21", "R22", "R23", "R24"), 
+    ticktext = c("North", "South", "Sardegna", "Sicilia", "Vatican City", "San Marino", "Corsica", "Canton Ticino"),
+    tickangle = 315
   )
   
   output$plot1 <- renderPlotly(
@@ -412,7 +430,8 @@ server <- function(input, output) {
         line = list(color = 'rgb(86,108,115)',
                     width = 1.5)
       )
-    )
+    ) %>%
+      layout(xaxis = xform.plot2)
   )
   
   output$plot3 <- renderPlotly(

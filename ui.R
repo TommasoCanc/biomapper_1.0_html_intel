@@ -100,16 +100,15 @@ shinyUI(
         # Import your data ----      
         HTML(
           "<h2>Load data</h2>
-          <b>Note</b>: Data have to be load in a specific format. Please go to the <i><b>Help</b></i> panel for more information.
+          <b>Note</b>: Data have to be load in a standardized format. Please download the templates of the <b>model 1</b> or <b>2</b> to create your standard table.
           <br>
           <br>
-          Download <b>model 1</b> template at: <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_1.xlsx' target='_blank'>model 1</a>
+          Download <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_1.xlsx' target='_blank'>model 1</a>
           <br>
-          Download <b>model 2</b> template at: <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_2.xlsx' target='_blank'>model 2</a>
+          Download <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_2.xlsx' target='_blank'>model 2</a>
           <br>
           <br>
-          <b>Select your data</b>
-            <h5>Data can be loaded in <b>.xlsx</b>, <b>.csv</b>, or <b>.txt</b> formats.</h5>"
+          <b>Select your data (<b>.xlsx</b>, <b>.csv</b>, or <b>.txt</b>)</b>"
         ),
         
         fluidRow(
@@ -189,9 +188,8 @@ shinyUI(
         hr(),
         
         fluidRow(
-          HTML("<h2>Insert the taxa richness for each
-               <br>
-               <b>Marine</b> geographical units</h2> <br>"),
+          HTML("<h2><b>Marine</b> geographical units</h2> 
+               <br>"),
           column(2, numericInput("m1", "Sector 1", 0)),
           column(2, numericInput("m2", "Sector 2", 0)),
           column(2, numericInput("m3", "Sector 3", 0)),
@@ -266,7 +264,7 @@ shinyUI(
                            <br>
                            <b>Note</b>: Data have to be load in the format <i><b>model 2</b></i>.
                            <br>
-                           Download <b>model 2</b> template at: <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_2.xlsx' target='_blank'>model 2</a>"),
+                           Download <a href='https://github.com/TommasoCanc/biomapper_1.0_html_intel/blob/main/model_2.xlsx' target='_blank'>model 2</a>"),
                       
                       br(),
                       br(),
