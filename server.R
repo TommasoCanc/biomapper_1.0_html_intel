@@ -164,7 +164,7 @@ server <- function(input, output) {
   
   # Merge shp and richness (Macro)
   macro.map.reactive <- reactive({
-    macro <- st_read("./data/North_South/North_South.shp")
+    macro <- st_read("./data/North_South/North_South_4326.shp")
     if(input$importData == 1){
       macro <- merge(macro, readInput()$DF, by = "ID") # Merge shapefile with richness data
     } else {
