@@ -615,7 +615,7 @@ server <- function(input, output) {
       haligned <- gtable_combine(g1, g2, along = 1)
       
       title.grob <- textGrob(
-        label = "Terrestial richness",
+        label = "Terrestrial richness",
         x = unit(0, "lines"),
         y = unit(0, "lines"),
         hjust = 0,
@@ -695,7 +695,7 @@ server <- function(input, output) {
       haligned <- gtable_combine(g1, g2, g3, along = 1)
       
       title.grob <- textGrob(
-        label = "Terrestial and marine richness",
+        label = "Terrestrial and marine richness",
         x = unit(0, "lines"),
         y = unit(-1.5, "lines"),
         hjust = 0,
@@ -858,7 +858,7 @@ server <- function(input, output) {
         readInput2()$report,
         rownames = FALSE,
         options = list(lengthChange = FALSE, scrollX = FALSE),
-        editable = TRUE,
+        editable = FALSE,
         width = 1000
       )
     }
@@ -880,7 +880,7 @@ server <- function(input, output) {
     content = function(file) {
       
       tempReport <- file.path(tempdir(), "shiny_report.Rmd")
-      file.copy("/shiny_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy("./shiny_report.Rmd", tempReport, overwrite = TRUE)
       
       params <- list(reportName = input$reportName,
                      authorName = input$authorName,

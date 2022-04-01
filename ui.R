@@ -131,7 +131,7 @@ shinyUI(
         hr(),
         
         HTML(
-          "<h2><b>Terrestial</b> geographical units</h2>
+          "<h2><b>Terrestrial</b> geographical units</h2>
           <br>
           <b>Note</b>: F.V.G. = Friuli venezia Giulia; T.A.A. = Trentino Alto Adige, Em-Ro: Emilia Romagna
           <br>
