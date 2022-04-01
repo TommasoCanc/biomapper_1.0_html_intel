@@ -448,12 +448,12 @@ server <- function(input, output) {
       layout(xaxis = xform.plot3)
   )
   
-  # Plot small ggplot map
+  # Plot small ggplot map ----
   mapPlot.2 <- reactive({
     img <- readPNG("./data/italy_sea.png")
   })
   
-  # Create map-plot
+  # Create map-plot ----
   mapPlot.1 <- reactive({
     
     # Map 1: Terrestrial
@@ -605,10 +605,12 @@ server <- function(input, output) {
     
     # Map 1: Terrestrial richness
     if(input$selectMap == "map1"){
-      g1 <- tableGrob(ter.reactive()[1:11, 2:1],
+      g1 <- tableGrob(data.frame(Geographical_Units = ter.map.reactive()$NAME[1:11],
+                                 Richness = ter.map.reactive()$richness[1:11]),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
-      g2 <- tableGrob(ter.reactive()[12:22, 2:1],
+      g2 <- tableGrob(data.frame(Geographical_Units = ter.map.reactive()$NAME[12:22],
+                                 Richness = ter.map.reactive()$richness[12:22]),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
       
@@ -634,7 +636,8 @@ server <- function(input, output) {
     
     # Map 2: Marine richness
     if(input$selectMap == "map2"){
-      g1 <- tableGrob(sea.reactive()[1:nrow(sea.reactive()), 2:1],
+      g1 <- tableGrob(data.frame(Geographical_Units = sea.map.reactive()$NAME, 
+                                 Richness= sea.map.reactive()$richness),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
       
@@ -658,7 +661,8 @@ server <- function(input, output) {
     
     # Map 3: Macro richness
     if(input$selectMap == "map3"){
-      g1 <- tableGrob(macro.reactive()[1:nrow(macro.reactive()), 2:1],
+      g1 <- tableGrob(data.frame(Geographical_Units = macro.map.reactive()$NAME, 
+                                 Richness= macro.map.reactive()$richness),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
       
@@ -682,13 +686,16 @@ server <- function(input, output) {
     
     # Map 4: Terrestrial Marine map
     if(input$selectMap == "map4"){
-      g1 <- tableGrob(ter.reactive()[1:11, 2:1],
+      g1 <- tableGrob(data.frame(Geographical_Units = ter.map.reactive()$NAME[1:11],
+                                 Richness = ter.map.reactive()$richness[1:11]),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
-      g2 <- tableGrob(ter.reactive()[12:22, 2:1],
+      g2 <- tableGrob(data.frame(Geographical_Units = ter.map.reactive()$NAME[12:22],
+                                 Richness = ter.map.reactive()$richness[12:22]),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
-      g3 <- tableGrob(sea.reactive()[1:nrow(sea.reactive()), 2:1],
+      g3 <- tableGrob(data.frame(Geographical_Units = sea.map.reactive()$NAME, 
+                                 Richness= sea.map.reactive()$richness),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
       
@@ -714,10 +721,12 @@ server <- function(input, output) {
     
     # Map 5: Macro Marine map 
     if(input$selectMap == "map5"){
-      g1 <- tableGrob(macro.reactive()[1:nrow(macro.reactive()), 2:1],
+      g1 <- tableGrob(data.frame(Geographical_Units = macro.map.reactive()$NAME, 
+                                 Richness= macro.map.reactive()$richness),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
-      g2 <- tableGrob(sea.reactive()[1:nrow(sea.reactive()), 2:1],
+      g2 <- tableGrob(data.frame(Geographical_Units = sea.map.reactive()$NAME, 
+                                 Richness= sea.map.reactive()$richness),
                       rows = NULL,
                       theme = ttheme_minimal(base_size = 8))
       
