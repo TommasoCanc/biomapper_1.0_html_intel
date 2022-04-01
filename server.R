@@ -450,7 +450,7 @@ server <- function(input, output) {
   
   # Plot small ggplot map ----
   mapPlot.2 <- reactive({
-    img <- readPNG("./data/italy_sea.png")
+    img <- readPNG("./data/italy_new.png")
   })
   
   # Create map-plot ----
